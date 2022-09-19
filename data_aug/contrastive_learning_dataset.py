@@ -18,7 +18,7 @@ class ContrastiveLearningDataset:
                                               transforms.RandomApply([color_jitter], p=0.8),
                                               transforms.RandomGrayscale(p=0.2),
                                               GaussianBlur(kernel_size=int(0.1 * size)),
-                                              transforms.ToTensor()])
+                                              transforms.ToTensor()])  # ToTensor默认会执行max=255, min=0的归一化
         return data_transforms
 
     def get_dataset(self, name, n_views):

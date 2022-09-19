@@ -23,7 +23,7 @@ class SimCLR(object):
         logging.basicConfig(filename=os.path.join(self.writer.log_dir, 'training.log'), level=logging.DEBUG)
         self.criterion = torch.nn.CrossEntropyLoss().to(self.args.device)
 
-    def info_nce_loss(self, features):
+    def info_nce_loss(self, features):  # compute INFO NCE loss
 
         labels = torch.cat([torch.arange(self.args.batch_size) for i in range(self.args.n_views)], dim=0)
         labels = (labels.unsqueeze(0) == labels.unsqueeze(1)).float()
@@ -56,7 +56,7 @@ class SimCLR(object):
 
     def train(self, train_loader):
 
-        scaler = GradScaler(enabled=self.args.fp16_precision)
+        scaler = GradScaler(enabled=self.args.fp16_precision)  # 混合精度训练
 
         # save config file
         save_config_file(self.writer.log_dir, self.args)
@@ -78,8 +78,7 @@ class SimCLR(object):
 
                 self.optimizer.zero_grad()
 
-                scaler.scale(loss).backward()
-
+                scaler.scale(loss).backward()  # 混合精度训练
                 scaler.step(self.optimizer)
                 scaler.update()
 
